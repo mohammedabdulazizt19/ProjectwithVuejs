@@ -1,41 +1,53 @@
-<template>
-  <!--<img alt="Vue logo" src="./assets/logo.png">-->
-  <!--<HelloWorld msg="Welcome to Your Vue.js App"/> -->
-  <div id="app" class="h-100">
-    <div class="container-fluid h-100">
-      <div class="row h-100">
-        <div class="col-12 h-100 d-flex justify-content-center">
-          <div class="col-md-8 px-5 py-4 text-left">
-            <LogIn />
-          </div>
-         
-        </div>
-      </div>
-
-    </div>
-    
-  </div>
-
-</template>
-
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
-import LogIn from './components/LogIn.vue'
+import Login from './components/LogIn.vue'
+import HelloWorld from './components/HelloWorld.vue'
+import NotFound from './components/NotFound.vue'
+
+const routes = {
+  '/': Login,
+  '/hello-world': HelloWorld
+}
+
 export default {
-  name: 'App',
-  components: {
-    LogIn
+  data() {
+    return {
+      currentPath: window.location.hash
+    }
+  },
+  computed: {
+    currentView() {
+      return routes[this.currentPath.slice(1) || '/'] || NotFound
+    }
+  },
+  mounted() {
+    window.addEventListener('hashchange', () => {
+      this.currentPath = window.location.hash
+		})
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
+<template>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#/">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#/hello-world">Hello World</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-3">
+  <component :is="currentView" />
+</div>
+</template>
